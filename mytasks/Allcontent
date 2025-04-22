@@ -1,0 +1,7 @@
+FLATLIST
+  componente de renderização perfomática (ideal para muitas tarefas), porque ele só renderiza o que está na tela. Isso economiza memória e melhora o desempenho.
+
+
+SCROLLVIEW
+  componente de renderização padrão (ideal para listas pequenas), porque ele renderiza todos os itens de uma vez. Isso pode causar problemas de desempenho se a lista for muito longa.
+
