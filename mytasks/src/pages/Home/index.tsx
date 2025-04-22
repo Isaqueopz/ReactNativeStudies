@@ -20,6 +20,10 @@ export const Home = () => {
   const [newTask, setNewTask] = React.useState('');
   const [tasks, setTasks] = React.useState<Task[]>([]);
 
+  const handleRemoveTask = (id: string) => {
+    setTasks(tasks.filter((task) => task.id !== id));
+  };
+
   const handleAddNewTask = () => {
     const data: Task = {
       id: String(new Date().getTime()),
@@ -52,7 +56,7 @@ export const Home = () => {
         </TouchableOpacity>
 
         <Text style={styles.textTasks}>My tasks:</Text>
-        <TaskList tasks={tasks} />
+        <TaskList tasks={tasks} onRemoveTask={handleRemoveTask} />
       </View>
     </SafeAreaView>
   );
