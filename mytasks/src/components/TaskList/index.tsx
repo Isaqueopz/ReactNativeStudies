@@ -9,9 +9,14 @@ interface Task {
 interface TaskListProps {
   tasks: Task[];
   onRemoveTask: (id: string) => void;
+  onTaskPress: (task: Task) => void;
 }
 
-export const TaskList = ({ tasks, onRemoveTask }: TaskListProps) => {
+export const TaskList = ({
+  tasks,
+  onRemoveTask,
+  onTaskPress,
+}: TaskListProps) => {
   return (
     <FlatList
       data={tasks}
@@ -19,9 +24,7 @@ export const TaskList = ({ tasks, onRemoveTask }: TaskListProps) => {
       renderItem={({ item }) => (
         <TouchableOpacity
           style={styles.buttonTask}
-          onPress={() => {
-            onRemoveTask(item.id);
-          }}
+          onPress={() => onTaskPress(item)}
         >
           <Text style={styles.titleTask}>{item.title}</Text>
         </TouchableOpacity>

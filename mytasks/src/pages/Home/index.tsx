@@ -1,12 +1,11 @@
 import React from 'react';
 import {
-  // FlatList,
-  // ScrollView,
   Text,
   View,
   StyleSheet,
   TextInput,
   TouchableOpacity,
+  Modal,
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { TaskList } from '../../components/TaskList';
@@ -19,9 +18,12 @@ interface Task {
 export const Home = () => {
   const [newTask, setNewTask] = React.useState('');
   const [tasks, setTasks] = React.useState<Task[]>([]);
+  const [modalVisible, setModalVisible] = React.useState(false);
+  const [taskToDelete, setTaskToDelete] = React.useState<Task | null>(null);
 
   const handleRemoveTask = (id: string) => {
     setTasks(tasks.filter((task) => task.id !== id));
+    setModalVisible(false);
   };
 
   const handleAddNewTask = () => {
@@ -29,9 +31,13 @@ export const Home = () => {
       id: String(new Date().getTime()),
       title: newTask.trim() || 'Task Empty',
     };
-
     setTasks([...tasks, data]);
     setNewTask('');
+  };
+
+  const toggleModal = (task: Task) => {
+    setTaskToDelete(task);
+    setModalVisible(true);
   };
 
   return (
@@ -56,7 +62,43 @@ export const Home = () => {
         </TouchableOpacity>
 
         <Text style={styles.textTasks}>My tasks:</Text>
-        <TaskList tasks={tasks} onRemoveTask={handleRemoveTask} />
+        <TaskList
+          tasks={tasks}
+          onRemoveTask={handleRemoveTask}
+          onTaskPress={toggleModal}
+        />
+
+        <Modal
+          animationType="fade"
+          transparent={false}
+          visible={modalVisible}
+          onRequestClose={() => setModalVisible(false)}
+        >
+          <View style={styles.modalContainer}>
+            <Text style={styles.modalText}>
+              {taskToDelete
+                ? `Do you want to delete the task "${taskToDelete.title}"?`
+                : ''}
+            </Text>
+            <View style={styles.modalButtonContainer}>
+              <TouchableOpacity
+                onPress={() => {
+                  if (taskToDelete) handleRemoveTask(taskToDelete.id);
+                }}
+                style={styles.button}
+              >
+                <Text style={styles.buttonText}>YES</Text>
+              </TouchableOpacity>
+
+              <TouchableOpacity
+                onPress={() => setModalVisible(false)}
+                style={styles.button}
+              >
+                <Text style={styles.buttonText}>NO</Text>
+              </TouchableOpacity>
+            </View>
+          </View>
+        </Modal>
       </View>
     </SafeAreaView>
   );
@@ -95,6 +137,7 @@ const styles = StyleSheet.create({
     borderRadius: 20,
     padding: 15,
     alignItems: 'center',
+    marginHorizontal: 10,
   },
   buttonText: {
     color: '#121214',
@@ -109,17 +152,20 @@ const styles = StyleSheet.create({
     marginTop: 30,
     marginBottom: 10,
   },
-  buttonTask: {
-    backgroundColor: '#29292e',
-    borderRadius: 50,
-    padding: 10,
-    marginBottom: 10,
-    marginTop: 10,
+  modalContainer: {
+    flex: 1,
+    justifyContent: 'center',
     alignItems: 'center',
+    backgroundColor: '#29292e',
   },
-  titleTask: {
-    color: '#f1f1f1',
+  modalText: {
+    color: '#fff',
     fontSize: 20,
-    fontWeight: 'bold',
+    marginBottom: 20,
+  },
+  modalButtonContainer: {
+    flexDirection: 'row',
+    justifyContent: 'center',
+    marginTop: 20,
   },
 });
