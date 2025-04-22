@@ -1,7 +1,107 @@
-FLATLIST
-  componente de renderização perfomática (ideal para muitas tarefas), porque ele só renderiza o que está na tela. Isso economiza memória e melhora o desempenho.
+====================
+📥 TextInput
+====================
+O que é: Componente de entrada de texto, usado para capturar dados do usuário.
+Propriedades:
 
+- placeholder: Texto exibido quando o campo está vazio.
+- value: Valor atual do campo (ligado ao estado newTask).
+- onChangeText: Função chamada quando o texto muda.
+- placeholderTextColor: Cor do texto do placeholder.
+- style: Objeto de estilo aplicado ao campo.
+- (Extras possíveis): secureTextEntry, keyboardType, maxLength, etc.
 
-SCROLLVIEW
-  componente de renderização padrão (ideal para listas pequenas), porque ele renderiza todos os itens de uma vez. Isso pode causar problemas de desempenho se a lista for muito longa.
+====================
+🔘 TouchableOpacity
+====================
+O que é: Botão sensível ao toque que altera sua opacidade quando pressionado.
+Propriedades:
 
+- onPress: Função chamada quando o botão é pressionado.
+- style: Estilo visual do botão.
+- activeOpacity: Define quanta opacidade aplicar ao tocar (0 a 1).
+- (Extras possíveis): disabled, hitSlop, delayPressIn, etc.
+
+====================
+📄 Text
+====================
+O que é: Componente para exibir textos na tela.
+Propriedades:
+
+- style: Estilo do texto (cor, tamanho, peso, etc).
+- (Extras possíveis): numberOfLines, ellipsizeMode, etc.
+
+====================
+📦 View
+====================
+O que é: Contêiner genérico para layout e posicionamento de elementos.
+Propriedades:
+
+- style: Estilo aplicado à View (largura, altura, flex, padding...).
+- (Extras possíveis): onLayout, pointerEvents, etc.
+
+====================
+🛟 SafeAreaView
+====================
+O que é: Garante que o conteúdo fique dentro da área segura da tela.
+Propriedades:
+
+- style: Estilo aplicado à área segura.
+- (Extras possíveis): edges, mode, etc.
+
+====================
+🧠 useState (React Hook)
+====================
+O que é: Hook usado para criar e manipular estado em componentes funcionais.
+Exemplo:
+const [newTask, setNewTask] = React.useState('');
+
+- newTask: valor atual
+- setNewTask: função para atualizar esse valor
+
+====================
+🧾 FlatList
+====================
+O que é: Lista de rolagem otimizada, ideal para grandes quantidades de dados.
+Propriedades:
+
+- data: Array de dados a ser exibido.
+- renderItem: Função que renderiza cada item da lista.
+- keyExtractor: Função que retorna uma chave única por item.
+- (Extras possíveis): horizontal, ListHeaderComponent, onEndReached, etc.
+
+====================
+🧩 StyleSheet
+====================
+O que é: API para organizar estilos, melhorando performance e organização.
+Exemplo:
+const styles = StyleSheet.create({
+container: {
+flex: 1,
+padding: 20,
+},
+});
+
+====================
+🌐 SafeAreaProvider
+====================
+O que é: Componente que envolve o app para ativar o suporte à área segura.
+Função: Fornece contexto de área segura para SafeAreaView funcionar corretamente.
+
+====================
+📚 registerRootComponent
+====================
+O que é: Função do Expo que registra o componente raiz do app.
+Função: Garante que o app inicie corretamente no ambiente do Expo.
+Exemplo:
+registerRootComponent(App);
+
+====================
+🧱 TaskList (componente customizado)
+====================
+O que é: Componente personalizado para exibir tarefas.
+Propriedades:
+
+- tasks: Array de tarefas com id e title.
+- Internamente usa FlatList para renderizar os itens.
+- renderItem: Renderiza cada tarefa com Text e TouchableOpacity.
