@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import {
   Text,
   View,
@@ -9,6 +9,7 @@ import {
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { TaskList } from '../../components/TaskList';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 interface Task {
   id: string;
@@ -21,9 +22,36 @@ export const Home = () => {
   const [modalVisible, setModalVisible] = React.useState(false);
   const [taskToDelete, setTaskToDelete] = React.useState<Task | null>(null);
 
+  React.useEffect(() => {
+    const loadTasks = async () => {
+      try {
+        const storedTasks = await AsyncStorage.getItem('@tasks');
+        console.log('Tarefas carregadas:', storedTasks);
+
+        const parsedTasks = JSON.parse(storedTasks ?? '');
+        console.log('Tarefas carregadas com sucesso');
+        setTasks(parsedTasks);
+        console.log('Tarefas setadas');
+      } catch (error) {
+        console.log('Erro ao carregar tarefas', error);
+      }
+    };
+    loadTasks();
+  }, []);
+  const saveTasks = async (tasksArray: Task[]) => {
+    try {
+      console.log('Salvando tarefas:', tasksArray);
+      await AsyncStorage.setItem('@tasks', JSON.stringify(tasksArray));
+      console.log('Tarefas salvas com sucesso!');
+    } catch (error) {
+      console.log('Erro ao salvar tarefas', error);
+    }
+  };
   const handleRemoveTask = (id: string) => {
-    setTasks(tasks.filter((task) => task.id !== id));
+    const temp = tasks.filter((task) => task.id !== id);
+    setTasks(temp);
     setModalVisible(false);
+    saveTasks(temp);
   };
 
   const handleAddNewTask = () => {
@@ -31,8 +59,10 @@ export const Home = () => {
       id: String(new Date().getTime()),
       title: newTask.trim() || 'Task Empty',
     };
-    setTasks([...tasks, data]);
+    const temp = [...tasks, data];
+    setTasks(temp);
     setNewTask('');
+    saveTasks(temp);
   };
 
   const toggleModal = (task: Task) => {
