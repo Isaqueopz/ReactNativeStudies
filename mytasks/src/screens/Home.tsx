@@ -1,12 +1,5 @@
 import React, { useEffect } from 'react';
-import {
-  Text,
-  View,
-  StyleSheet,
-  TextInput,
-  TouchableOpacity,
-  Modal,
-} from 'react-native';
+import { Text, View, StyleSheet } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { TaskList } from '../components/TaskList';
 import AsyncStorage from '@react-native-async-storage/async-storage';
