@@ -1,5 +1,11 @@
 import React from 'react';
-import { TextInput, TouchableOpacity, Text, StyleSheet, View } from 'react-native';
+import {
+  TextInput,
+  TouchableOpacity,
+  Text,
+  StyleSheet,
+  View,
+} from 'react-native';
 
 interface NewTaskInputProps {
   value: string;
@@ -7,7 +13,11 @@ interface NewTaskInputProps {
   onSubmit: () => void;
 }
 
-export const TaskInputForm = ({ value, onChangeText, onSubmit }: NewTaskInputProps) => {
+export const NewTaskInputForm = ({
+  value,
+  onChangeText,
+  onSubmit,
+}: NewTaskInputProps) => {
   return (
     <View style={styles.container}>
       <TextInput

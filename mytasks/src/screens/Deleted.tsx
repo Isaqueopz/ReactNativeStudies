@@ -43,15 +43,15 @@ const styles = StyleSheet.create({
     padding: 20,
   },
   title: {
-    fontSize: 30, // Tamanho maior para o título
+    fontSize: 30,
     fontWeight: 'bold',
     color: '#fff',
-    marginBottom: 20, // Espaçamento abaixo do título
-    textAlign: 'center', // Centraliza o título
+    marginBottom: 20,
+    textAlign: 'center',
     padding: 40,
   },
   item: {
-    fontSize: 18, // Mantém o tamanho consistente com as tarefas ativas
+    fontSize: 18,
     color: '#fff',
     paddingVertical: 10,
     borderBottomWidth: 1,

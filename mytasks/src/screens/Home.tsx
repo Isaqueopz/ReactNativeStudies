@@ -11,7 +11,7 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import { TaskList } from '../components/TaskList';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { TaskDeleteModal } from '../components/Modal';
-import { TaskInputForm } from '../components/TaskInputForm';
+import { NewTaskInputForm } from '../components/NewTaskInputForm';
 
 interface Task {
   id: string;
@@ -82,7 +82,7 @@ export const Home = () => {
       <View style={styles.container}>
         <Text style={styles.text}>Task Manager</Text>
 
-        <TaskInputForm
+        <NewTaskInputForm
           value={newTask}
           onChangeText={setNewTask}
           onSubmit={handleAddNewTask}
