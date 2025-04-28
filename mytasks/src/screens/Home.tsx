@@ -8,8 +8,10 @@ import {
   Modal,
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { TaskList } from '../components/TaskList/TaskList';
+import { TaskList } from '../components/TaskList';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { TaskDeleteModal } from '../components/modal';
+
 
 interface Task {
   id: string;
@@ -18,7 +20,7 @@ interface Task {
 
 export const Home = () => {
   const [newTask, setNewTask] = React.useState('');
-  const [tasks, setTasks] = React.useState<Task[]>([]);
+  const [currentTasks, setTasks] = React.useState<Task[]>([]);
   const [modalVisible, setModalVisible] = React.useState(false);
   const [taskToDelete, setTaskToDelete] = React.useState<Task | null>(null);
 
@@ -26,8 +28,6 @@ export const Home = () => {
     const loadTasks = async () => {
       try {
         const storedTasks = await AsyncStorage.getItem('@tasks');
-        console.log('Tarefas carregadas:', storedTasks);
-
         const parsedTasks = JSON.parse(storedTasks ?? '[]');
         setTasks(parsedTasks);
       } catch (error) {
@@ -53,12 +53,12 @@ export const Home = () => {
   };
 
   const handleRemoveTask = (id: string) => {
-    const task = tasks.find((t) => t.id === id);
+    const task = currentTasks.find((task) => task.id === id);
     if (task) saveDeletedTask(task);
-    const updatedTasks = tasks.filter((t) => t.id !== id);
+    const updatedTasks = currentTasks.filter((task) => task.id !== id);
     setTasks(updatedTasks);
     setModalVisible(false);
-    saveTasks(updatedTasks); // ou o nome da função que salva no AsyncStorage
+    saveTasks(updatedTasks);
   };
 
   const handleAddNewTask = () => {
@@ -66,7 +66,7 @@ export const Home = () => {
       id: String(new Date().getTime()),
       title: newTask.trim() || 'Task Empty',
     };
-    const temp = [...tasks, data];
+    const temp = [...currentTasks, data];
     setTasks(temp);
     setNewTask('');
     saveTasks(temp);
@@ -99,43 +99,22 @@ export const Home = () => {
         </TouchableOpacity>
 
         <Text style={styles.textTasks}>My tasks:</Text>
+
         <TaskList
-          tasks={tasks}
+          tasks={currentTasks}
           onRemoveTask={handleRemoveTask}
           onTaskPress={toggleModal}
         />
 
-        <Modal
-          animationType="fade"
-          transparent={false}
+        <TaskDeleteModal
           visible={modalVisible}
-          onRequestClose={() => setModalVisible(false)}
-        >
-          <View style={styles.modalContainer}>
-            <Text style={styles.modalText}>
-              {taskToDelete
-                ? `Do you want to delete the task "${taskToDelete.title}"?`
-                : ''}
-            </Text>
-            <View style={styles.modalButtonContainer}>
-              <TouchableOpacity
-                onPress={() => {
-                  if (taskToDelete) handleRemoveTask(taskToDelete.id);
-                }}
-                style={styles.button}
-              >
-                <Text style={styles.buttonText}>YES</Text>
-              </TouchableOpacity>
+          task={taskToDelete}
+          onConfirm={() => {
+            if (taskToDelete) handleRemoveTask(taskToDelete.id);
+          }}
+          onCancel={() => setModalVisible(false)}
+        />
 
-              <TouchableOpacity
-                onPress={() => setModalVisible(false)}
-                style={styles.button}
-              >
-                <Text style={styles.buttonText}>NO</Text>
-              </TouchableOpacity>
-            </View>
-          </View>
-        </Modal>
       </View>
     </SafeAreaView>
   );
@@ -189,21 +168,5 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     marginTop: 30,
     marginBottom: 10,
-  },
-  modalContainer: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: '#29292e',
-  },
-  modalText: {
-    color: '#fff',
-    fontSize: 20,
-    marginBottom: 20,
-  },
-  modalButtonContainer: {
-    flexDirection: 'row',
-    justifyContent: 'center',
-    marginTop: 20,
   },
 });
